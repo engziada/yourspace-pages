@@ -1,11 +1,308 @@
 
-<html>
-  <head>
-    <title>YourSpace for Space Co-Working Space</title>
-  </head>
-  <body style="font-family: Arial">
-    <h1>👋 Hello Space Co-Working Space</h1>
-    <p><strong>Slogan:</strong> A space to work, connect, and grow.</p>
-    <p>This is your personalized demo for <b>YourSpace</b>.</p>
-  </body>
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> $json.title | Elevate Your Workspace</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Base styles and font settings */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F9FA;
+            color: #1a202c;
+        }
+
+        /* Subtle background pattern for hero section */
+        #hero {
+            background-image: radial-gradient(#e0e7ff 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Custom animation for hero content fade-in */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        #hero-content {
+            animation: fadeIn 1s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header / Navigation Bar -->
+    <header class="bg-white/90 backdrop-blur-lg fixed top-0 left-0 right-0 z-50 border-b border-gray-200/80 shadow-sm">
+        <div class="container mx-auto px-6">
+            <!-- This div has a fixed height to prevent padding/margin distortions -->
+            <div class="flex items-center justify-between h-20">
+                <div class="text-2xl font-bold text-gray-800">
+                    <a href="#">$json.title</a>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#features" class="text-gray-600 hover:text-indigo-600 transition-colors duration-300">Features</a>
+                    <a href="#spaces" class="text-gray-600 hover:text-indigo-600 transition-colors duration-300">Our Spaces</a>
+                    <a href="#pricing" class="text-gray-600 hover:text-indigo-600 transition-colors duration-300">Pricing</a>
+                    <a href="#contact" class="text-gray-600 hover:text-indigo-600 transition-colors duration-300">Contact</a>
+                </nav>
+
+                <!-- Desktop CTA Button -->
+                <div class="hidden md:flex items-center">
+                    <a href="#contact" class="bg-indigo-600 text-white font-semibold px-5 py-2.5 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 transition-all duration-300">
+                        Book a Tour
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button with Icon Toggle -->
+                <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
+                    <i data-lucide="menu" class="h-6 w-6 menu-icon"></i>
+                    <i data-lucide="x" class="h-6 w-6 x-icon hidden"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu (Redesigned for clarity) -->
+        <div id="mobile-menu" class="hidden md:hidden">
+             <div class="space-y-1 px-4 pt-2 pb-3">
+                 <a href="#features" class="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-indigo-600">Features</a>
+                 <a href="#spaces" class="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-indigo-600">Our Spaces</a>
+                 <a href="#pricing" class="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-indigo-600">Pricing</a>
+                 <a href="#contact" class="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-indigo-600">Contact</a>
+             </div>
+             <!-- Visually separated CTA button to fix misplacement issue -->
+             <div class="border-t border-gray-200 px-4 py-3">
+                 <a href="#contact" class="block w-full text-center bg-indigo-600 text-white font-semibold px-5 py-3 rounded-lg shadow-md hover:bg-indigo-700">
+                        Book a Tour
+                 </a>
+             </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="pt-32 pb-20">
+            <div id="hero-content" class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-4">
+                    The Future of Work is Flexible.
+                </h1>
+                <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+                    $json.title provides premium, elegantly designed workspaces that inspire productivity, foster collaboration, and empower your team to do its best work.
+                </p>
+                <div class="flex justify-center items-center space-x-4">
+                    <a href="#spaces" class="bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-indigo-700 transform hover:scale-105 transition-all duration-300">
+                        Explore Our Spaces
+                    </a>
+                    <a href="#pricing" class="bg-white text-indigo-600 font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 border border-gray-200">
+                        View Plans
+                    </a>
+                </div>
+                <!-- YourSpace Notation -->
+                <div class="mt-12">
+                    <p class="text-sm text-gray-500 inline-flex items-center">
+                        <i data-lucide="zap" class="h-4 w-4 mr-2 text-indigo-500"></i>
+                        Seamlessly powered by <strong class="font-semibold text-gray-600 mx-1">YourSpace</strong> for an intelligent workspace experience.
+                    </p>
+                </div>
+                <div class="mt-12">
+                     <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2073&auto=format&fit=crop" 
+                         alt="Modern coworking space with people collaborating" 
+                         class="rounded-2xl mx-auto shadow-2xl w-full max-w-5xl"
+                         onerror="this.onerror=null;this.src='https://placehold.co/1200x600/e2e8f0/4a5568?text=Inspiring+Workspace';"
+                         >
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Why You'll Love Working Here</h2>
+                    <p class="text-lg text-gray-500 mt-2">Everything you need to be productive, under one roof.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Feature 1 -->
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="bg-indigo-100 text-indigo-600 w-12 h-12 rounded-full flex items-center justify-center mb-4">
+                            <i data-lucide="wifi"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Blazing Fast Wi-Fi</h3>
+                        <p class="text-gray-600">Enterprise-grade, secure, and reliable internet so you never miss a beat.</p>
+                    </div>
+                    <!-- Feature 2 -->
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="bg-indigo-100 text-indigo-600 w-12 h-12 rounded-full flex items-center justify-center mb-4">
+                            <i data-lucide="coffee"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Gourmet Coffee & Snacks</h3>
+                        <p class="text-gray-600">Stay fueled with complimentary artisan coffee, tea, and healthy snacks.</p>
+                    </div>
+                    <!-- Feature 3 -->
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="bg-indigo-100 text-indigo-600 w-12 h-12 rounded-full flex items-center justify-center mb-4">
+                            <i data-lucide="users"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Vibrant Community</h3>
+                        <p class="text-gray-600">Connect and collaborate with a network of driven professionals and entrepreneurs.</p>
+                    </div>
+                     <!-- Feature 4 -->
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="bg-indigo-100 text-indigo-600 w-12 h-12 rounded-full flex items-center justify-center mb-4">
+                            <i data-lucide="calendar-check"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Bookable Meeting Rooms</h3>
+                        <p class="text-gray-600">Impress clients in our fully-equipped, state-of-the-art conference rooms.</p>
+                    </div>
+                     <!-- Feature 5 -->
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="bg-indigo-100 text-indigo-600 w-12 h-12 rounded-full flex items-center justify-center mb-4">
+                           <i data-lucide="lock"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">24/7 Secure Access</h3>
+                        <p class="text-gray-600">Work on your schedule with secure, round-the-clock access for members.</p>
+                    </div>
+                     <!-- Feature 6 -->
+                    <div class="bg-gray-50 p-8 rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="bg-indigo-100 text-indigo-600 w-12 h-12 rounded-full flex items-center justify-center mb-4">
+                           <i data-lucide="map-pin"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Prime Location</h3>
+                        <p class="text-gray-600">Conveniently located in the heart of the city, with easy access to transit and dining.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spaces Section -->
+        <section id="spaces" class="py-20">
+            <div class="container mx-auto px-6">
+                 <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Find Your Perfect Space</h2>
+                    <p class="text-lg text-gray-500 mt-2">From a single desk to a private office, we have the right fit for you.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Space 1: Private Office -->
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden group">
+                        <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2232&auto=format&fit=crop" alt="Private Office" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800">Private Offices</h3>
+                            <p class="text-gray-600 mt-2">Secure, move-in ready offices for teams of all sizes. Fully furnished and customizable.</p>
+                        </div>
+                    </div>
+                     <!-- Space 2: Dedicated Desk -->
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden group">
+                        <img src="https://images.unsplash.com/photo-1516534775068-ba3e7458af70?q=80&w=2070&auto=format&fit=crop" alt="Dedicated Desk" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800">Dedicated Desks</h3>
+                            <p class="text-gray-600 mt-2">Your own personal desk in a shared space, with lockable storage included.</p>
+                        </div>
+                    </div>
+                     <!-- Space 3: Hot Desk -->
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden group">
+                        <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=2070&auto=format&fit=crop" alt="Hot Desk" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800">Flexi Desks</h3>
+                            <p class="text-gray-600 mt-2">Grab any open seat in our common areas. Perfect for ultimate flexibility.</p>
+                        </div>
+                    </div>
+                     <!-- Space 4: Meeting Rooms -->
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden group">
+                        <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=2070&auto=format&fit=crop" alt="Meeting Room" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800">Meeting Rooms</h3>
+                            <p class="text-gray-600 mt-2">Bookable by the hour for workshops, presentations, or important calls.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section id="contact" class="bg-indigo-700">
+            <div class="container mx-auto px-6 py-20 text-center">
+                 <h2 class="text-3xl md:text-4xl font-bold text-white">Ready to Elevate Your Workday?</h2>
+                 <p class="text-lg text-indigo-200 mt-2 max-w-2xl mx-auto">
+                    Come see the space for yourself. Schedule a tour today and discover your new work home.
+                 </p>
+                 <a href="#" class="mt-8 inline-block bg-white text-indigo-700 font-bold px-10 py-4 rounded-lg shadow-xl hover:bg-gray-100 transform hover:scale-105 transition-all duration-300">
+                    Schedule a Free Tour
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white">
+        <div class="container mx-auto px-6 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">$json.title</h3>
+                    <p class="text-gray-400">The premier workspace for innovators, creators, and entrepreneurs.</p>
+                </div>
+                 <div>
+                    <h4 class="font-semibold text-lg mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#features" class="text-gray-400 hover:text-white">Features</a></li>
+                        <li><a href="#spaces" class="text-gray-400 hover:text-white">Spaces</a></li>
+                        <li><a href="#pricing" class="text-gray-400 hover:text-white">Pricing</a></li>
+                    </ul>
+                </div>
+                 <div>
+                    <h4 class="font-semibold text-lg mb-4">Connect</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Twitter</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">LinkedIn</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Instagram</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg mb-4">Contact Us</h4>
+                    <p class="text-gray-400">123 Innovation Drive,<br>Suite 100,<br>Metropolis, 12345</p>
+                    <p class="text-gray-400 mt-2">hello@$json.title.com</p>
+                </div>
+            </div>
+            <div class="mt-12 border-t border-gray-700 pt-8 text-center text-gray-500">
+                &copy; <span id="year"></span> $json.title. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Lucide Icons activation
+        lucide.createIcons();
+
+        // Mobile menu toggle logic
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.querySelector('.menu-icon');
+        const xIcon = document.querySelector('.x-icon');
+
+        mobileMenuButton.addEventListener('click', () => {
+            // Toggle menu visibility
+            mobileMenu.classList.toggle('hidden');
+            
+            // Toggle icon visibility
+            menuIcon.classList.toggle('hidden');
+            xIcon.classList.toggle('hidden');
+        });
+
+        // Set current year in footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
 </html>
+
