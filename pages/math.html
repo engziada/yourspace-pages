@@ -5,6 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>عرض المجموعات - رياضيات 101</title>
     <style>
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: auto;
+            background: rgba(44, 62, 80, 0.45);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 2.5rem 2rem 1.5rem 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            min-width: 250px;
+            max-width: 90vw;
+            text-align: center;
+            position: relative;
+            animation: fadeIn 0.4s;
+        }
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: none;
+            border: none;
+            font-size: 1.7rem;
+            color: var(--secondary);
+            cursor: pointer;
+        }
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
         
         :root {
@@ -27,9 +65,9 @@
             background-color: #f5f7fa;
             color: var(--dark);
             height: 100vh;
-            overflow: hidden;
             display: flex;
             flex-direction: column;
+            font-size: clamp(1rem, 2vw, 1.4rem);
         }
         
         .presentation-container {
@@ -234,6 +272,51 @@
                 font-size: 0.9rem;
             }
         }
+    /* Illustration Animation */
+    .illustration-animated {
+        opacity: 0;
+        filter: drop-shadow(0 4px 12px rgba(44,62,80,0.13));
+        max-width: 140px; /* A bit larger for more detail */
+        transition: opacity 0.5s ease-in;
+    }
+    .illustration-animated.active {
+        opacity: 1;
+    }
+    .illustration-animated .part-1, 
+    .illustration-animated .part-2, 
+    .illustration-animated .part-3 {
+        opacity: 0;
+        transform-origin: center center;
+    }
+    .illustration-animated.active .part-1 {
+        animation: pop-in 0.7s 0.1s cubic-bezier(.3,1.5,.5,1) forwards;
+    }
+    .illustration-animated.active .part-2 {
+        animation: pop-in 0.7s 0.3s cubic-bezier(.3,1.5,.5,1) forwards;
+    }
+    .illustration-animated.active .part-3 {
+        animation: pop-in 0.7s 0.5s cubic-bezier(.3,1.5,.5,1) forwards;
+    }
+
+    /* Inline content icons */
+    .content-icon {
+        width: 48px;
+        height: 48px;
+        vertical-align: middle;
+        margin-right: 12px;
+        opacity: 0;
+        transform: scale(0.8);
+        transition: opacity 0.5s ease, transform 0.5s cubic-bezier(.3,1.5,.5,1);
+    }
+    .active .content-icon {
+        opacity: 1;
+        transform: scale(1);
+        transition-delay: 0.6s; /* Delay to follow header animation */
+    }
+    @keyframes pop-in {
+        0% { opacity: 0; transform: scale(0.7); }
+        100% { opacity: 1; transform: scale(1); }
+    }
     </style>
 </head>
 <body>
@@ -241,8 +324,8 @@
         <!-- Slide 1: Title Slide -->
         <div class="slide active" id="slide1">
             <div class="slide-content">
-                <svg class="icon" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M5,3H19A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3M13,13V19H17V13H13M13,5V11H17V5H13M5,13H11V19H5V13M5,5V11H11V5H5Z" />
+                <svg class="icon illustration-animated" role="img" aria-label="رسم توضيحي لعنوان رئيسي" viewBox="0 0 64 64">
+                    <g class="part-1"><rect x="10" y="12" width="44" height="40" rx="6" fill="#d6eaf8"/></g><g class="part-2"><rect x="18" y="20" width="28" height="6" rx="3" fill="#85c1e9"/></g><g class="part-3"><rect x="18" y="30" width="28" height="14" rx="3" fill="#aed6f1"/></g>
                 </svg>
                 <h1 class="slide-header">الوحدة الأولى: المجموعات</h1>
                 <div class="card">
@@ -260,15 +343,15 @@
             <div class="slide-content">
                 <h2 class="slide-header">ما هي المجموعة؟</h2>
                 <div class="card">
-                    <h3 class="card-title">تعريف المجموعة</h3>
+                    <h3 class="card-title"><svg class="content-icon" viewBox="0 0 24 24"><path fill="#3498db" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,16.5V13H7.5V11H11V7.5H13V11H16.5V13H13V16.5H11Z" /></svg>تعريف المجموعة</h3>
                     <p>المجموعة هي تجمع من الأشياء الحسية أو المعنوية المستقلة التي يمكن تمييزها عن غيرها بشكل دقيق.</p>
                     <p>كل عنصر في المجموعة يعتبر كائناً مستقلاً.</p>
                 </div>
                 
                 <div class="interactive-element">
                     <p><strong>أمثلة على المجموعات:</strong></p>
-                    <button class="btn btn-outline" onclick="alert('مجموعة أيام الأسبوع: {السبت, الأحد, الاثنين, الثلاثاء, الأربعاء, الخميس, الجمعة}')">عرض المثال الأول</button>
-                    <button class="btn btn-outline" onclick="alert('مجموعة أحرف كلمة \"رياضيات\": {ر, ي, ا, ض, ت}')">عرض المثال الثاني</button>
+                    <button class="btn btn-outline" onclick="showModal('مجموعة أيام الأسبوع: {السبت, الأحد, الاثنين, الثلاثاء, الأربعاء, الخميس, الجمعة}')">عرض المثال الأول</button>
+                    <button class="btn btn-outline" onclick="showModal('مجموعة أحرف كلمة &quot;رياضيات&quot;: {ر, ي, ا, ض, ت}')">عرض المثال الثاني</button>
                 </div>
             </div>
         </div>
@@ -276,10 +359,16 @@
         <!-- Slide 3: Representation -->
         <div class="slide" id="slide3">
             <div class="slide-content">
+    <!-- Educational SVG: List/Description -->
+    <svg class="icon illustration-animated" role="img" aria-label="رسم توضيحي لقائمة" viewBox="0 0 64 64">
+        <g class="part-1"><rect x="12" y="12" width="40" height="40" rx="6" fill="#e8daef"/></g>
+        <g class="part-2"><rect x="20" y="20" width="24" height="4" rx="2" fill="#af7ac5"/></g>
+        <g class="part-3"><rect x="20" y="30" width="18" height="4" rx="2" fill="#af7ac5"/></g>
+    </svg>
                 <h2 class="slide-header">تمثيل المجموعات</h2>
                 
                 <div class="card">
-                    <h3 class="card-title">طريقة السرد (الحصر)</h3>
+                    <h3 class="card-title"><svg class="content-icon" viewBox="0 0 24 24"><path fill="#9b59b6" d="M9,5V9H5V5H9M9,19H5V15H9V19M19,9H15V5H19V9M19,19H15V15H19V19M21,3H3A2,2 0 0,0 1,5V21H23V5A2,2 0 0,0 21,3Z" /></svg>طريقة السرد (الحصر)</h3>
                     <p>نذكر جميع عناصر المجموعة بين قوسين معقوفين {}</p>
                     <p><strong>مثال:</strong> A = {1, 2, 3, 4}</p>
                 </div>
@@ -302,10 +391,15 @@
         <!-- Slide 4: Membership -->
         <div class="slide" id="slide4">
             <div class="slide-content">
+    <!-- Educational SVG: Membership/Check -->
+    <svg class="icon illustration-animated" role="img" aria-label="رسم توضيحي لعضوية" viewBox="0 0 64 64">
+        <g class="part-1"><circle cx="32" cy="32" r="24" fill="#d4efdf"/></g>
+        <g class="part-2"><path d="M24 32l6 6 12-12" stroke="#229954" stroke-width="5" fill="none" stroke-linecap="round"/></g>
+    </svg>
                 <h2 class="slide-header">العلاقة بين العنصر والمجموعة</h2>
                 
                 <div class="card">
-                    <h3 class="card-title">الرمز ∈ (ينتمي إلى)</h3>
+                    <h3 class="card-title"><svg class="content-icon" viewBox="0 0 24 24"><path fill="#27ae60" d="M9,12L13.5,7.5L15,9L10.5,13.5L15,18L13.5,19.5L9,15V12M2,12A10,10 0 0,1 12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12Z" /></svg>الرمز ∈ (ينتمي إلى)</h3>
                     <p>يستخدم عندما يكون العنصر عضواً في المجموعة</p>
                     <p><strong>مثال:</strong> إذا كانت A = {1, 2, 3} فإن 2 ∈ A</p>
                 </div>
@@ -329,17 +423,22 @@
         <!-- Slide 5: Subsets -->
         <div class="slide" id="slide5">
             <div class="slide-content">
+    <!-- Educational SVG: Nested Circles (Subset) -->
+    <svg class="icon illustration-animated" role="img" aria-label="رسم توضيحي لمجموعة جزئية" viewBox="0 0 64 64">
+        <g class="part-1"><circle cx="32" cy="32" r="24" fill="#d6eaf8"/></g>
+        <g class="part-2"><circle cx="32" cy="32" r="14" fill="#aed6f1"/></g>
+    </svg>
                 <h2 class="slide-header">المجموعة الجزئية</h2>
                 
                 <div class="card">
-                    <h3 class="card-title">تعريف المجموعة الجزئية</h3>
+                    <h3 class="card-title"><svg class="content-icon" viewBox="0 0 24 24"><path fill="#2980b9" d="M10,13H7V10H10M17,13H14V10H17M17,7H14V4H17M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" /></svg>تعريف المجموعة الجزئية</h3>
                     <p>نقول أن A مجموعة جزئية من B (نكتب A ⊆ B) إذا كانت جميع عناصر A موجودة في B</p>
                     <p><strong>مثال:</strong> إذا كانت A = {1, 2} و B = {1, 2, 3, 4} فإن A ⊆ B</p>
                 </div>
                 
                 <div class="interactive-element">
                     <p>هل {3, 4} مجموعة جزئية من {1, 2, 3, 4, 5}؟</p>
-                    <button class="btn" onclick="showAnswer('نعم، لأن كل من 3 و 4 موجودان في المجموعة الكبرى')">عرض الإجابة</button>
+                    <button class="btn" onclick="showModal('نعم، لأن كل من 3 و 4 موجودان في المجموعة الكبرى')">عرض الإجابة</button>
                 </div>
             </div>
         </div>
@@ -347,10 +446,16 @@
         <!-- Slide 6: Types of Sets -->
         <div class="slide" id="slide6">
             <div class="slide-content">
+    <!-- Educational SVG: Category/Types -->
+    <svg class="icon illustration-animated" role="img" aria-label="رسم توضيحي لأنواع" viewBox="0 0 64 64">
+        <g class="part-1"><rect x="10" y="18" width="12" height="28" rx="4" fill="#f1948a"/></g>
+        <g class="part-2"><rect x="26" y="18" width="12" height="28" rx="4" fill="#85c1e9"/></g>
+        <g class="part-3"><rect x="42" y="18" width="12" height="28" rx="4" fill="#82e0aa"/></g>
+    </svg>
                 <h2 class="slide-header">أنواع المجموعات</h2>
                 
                 <div class="card">
-                    <h3 class="card-title">1. المجموعة الخالية</h3>
+                    <h3 class="card-title"><svg class="content-icon" viewBox="0 0 24 24"><path fill="#e67e22" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2M12 20c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8m-2-9h4v2h-4v-2z" /></svg>1. المجموعة الخالية</h3>
                     <p>لا تحتوي على أي عناصر، ترمز بـ ∅ أو {}</p>
                     <p><strong>مثال:</strong> مجموعة الأعداد الزوجية بين 2.5 و 3.5</p>
                 </div>
@@ -372,10 +477,15 @@
         <!-- Slide 7: Set Operations -->
         <div class="slide" id="slide7">
             <div class="slide-content">
+    <!-- Educational SVG: Venn Diagram -->
+    <svg class="icon illustration-animated" role="img" aria-label="رسم توضيحي لعمليات المجموعة" viewBox="0 0 64 64">
+        <g class="part-1"><circle cx="27" cy="32" r="16" fill="#aed6f1" opacity="0.8"/></g>
+        <g class="part-2"><circle cx="41" cy="32" r="16" fill="#f9e79f" opacity="0.8"/></g>
+    </svg>
                 <h2 class="slide-header">عمليات على المجموعات</h2>
                 
                 <div class="card">
-                    <h3 class="card-title">1. الاتحاد (A ∪ B)</h3>
+                    <h3 class="card-title"><svg class="content-icon" viewBox="0 0 24 24"><path fill="#16a085" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12C20,13.85 19.25,15.5 18.05,16.74L6.74,5.42C7.97,4.5 9.43,4 11,4H12M4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12Z" /></svg>1. الاتحاد (A ∪ B)</h3>
                     <p>جميع العناصر الموجودة في A أو B أو كليهما</p>
                 </div>
                 
@@ -402,8 +512,9 @@
         <!-- Slide 8: Final Slide -->
         <div class="slide" id="slide8">
             <div class="slide-content">
-                <svg class="icon" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2M10,17L5,12L6.41,10.59L10,14.17L17.59,6.58L19,8L10,17Z" />
+                <svg class="icon illustration-animated" role="img" aria-label="رسم توضيحي للنهاية" viewBox="0 0 64 64">
+                    <g class="part-1"><circle cx="32" cy="32" r="24" fill="#d1f2eb"/></g>
+                    <g class="part-2"><path d="M22 32l8 8 12-12" stroke="#1abc9c" stroke-width="6" fill="none" stroke-linecap="round"/></g>
                 </svg>
                 <h2 class="slide-header">نهاية العرض التقديمي</h2>
                 <div class="card">
@@ -432,6 +543,13 @@
             <button class="btn btn-accent" id="endBtn">انهاء</button>
         </div>
     </div>
+    <!-- Modal for answer reveal -->
+    <div class="modal" id="answerModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()" title="إغلاق">&times;</button>
+            <div id="modalAnswerText"></div>
+        </div>
+    </div>
 
     <script>
         // Slide management
@@ -447,11 +565,19 @@
         
         // Show current slide
         function showSlide(n) {
-            slides.forEach(slide => slide.classList.remove('active'));
+            slides.forEach((slide, idx) => {
+                slide.classList.remove('active');
+                // Reset all illustrations
+                slide.querySelectorAll('.illustration-animated').forEach(svg => svg.classList.remove('active'));
+            });
             slides[n].classList.add('active');
             currentSlide = n;
             updateSlideCounter();
-            
+            // Trigger animation on the new slide's illustration
+            const svg = slides[n].querySelector('.illustration-animated');
+            if (svg) {
+                setTimeout(() => svg.classList.add('active'), 100); // slight delay for smoothness
+            }
             // Disable/enable navigation buttons
             document.getElementById('prevBtn').disabled = n === 0;
             document.getElementById('nextBtn').disabled = n === totalSlides - 1;
@@ -504,12 +630,25 @@
             
             // Mark selected option
             element.classList.add('correct');
-            alert(answer);
+            showModal(answer);
         }
         
-        function showAnswer(answer) {
-            alert(answer);
+        function showModal(answer) {
+            document.getElementById('modalAnswerText').innerHTML = answer;
+            document.getElementById('answerModal').classList.add('active');
         }
+        
+        function closeModal() {
+            document.getElementById('answerModal').classList.remove('active');
+        }
+        
+        // Close modal on overlay click or ESC
+        document.getElementById('answerModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
         
         // Event listeners
         document.getElementById('nextBtn').addEventListener('click', nextSlide);
