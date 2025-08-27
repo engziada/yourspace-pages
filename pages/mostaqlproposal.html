@@ -259,8 +259,9 @@
                 
                 try {
                     const data = JSON.parse(rawText);
-                    const output = data?.output; // Corrected data access
+                    const output = data?.output;
 
+                    // Strict validation, as requested
                     if (!output?.proposal || !output?.conclusion || !output?.reason || !output?.suggestedCost || !output?.suggestPeriod || !output?.listOfRequirements) {
                         throw new Error('البيانات المستلمة من الخادم غير مكتملة أو بصيغة غير متوقعة.');
                     }
@@ -271,7 +272,8 @@
                 } catch (parseError) {
                     console.error("Error processing response:", parseError);
                     const saveButton = `<button onclick="saveRawResponse()">Save Raw Response</button>`;
-                    resultArea.innerHTML = `<div class="error">فشل في معالجة الرد من الخادم. قد يكون بصيغة غير متوقعة.<br><br><strong>الرد الخام:</strong><pre>${rawText}</pre><br>${saveButton}</div>`;
+                    // Removed raw response from the error panel
+                    resultArea.innerHTML = `<div class="error">فشل في معالجة الرد من الخادم. قد يكون بصيغة غير متوقعة.<br><br>${saveButton}</div>`;
                 }
                 
             } catch (error) {
@@ -290,9 +292,37 @@
             const conclusionText = isMatched ? 'ملائم للمهارات' : 'غير ملائم للمهارات';
             const conclusionIcon = isMatched ? 'fa-check-circle' : 'fa-times-circle';
 
-            const requirementsList = Array.isArray(data.listOfRequirements) 
-                ? data.listOfRequirements.map(req => `<li class="req-tag">${req}</li>`).join('')
-                : '<li>Error: listOfRequirements is not an array.</li>';
+            // Conditionally render details to be immune to null values
+            let detailsHtml = '';
+            if (isMatched) {
+                const requirementsList = Array.isArray(data.listOfRequirements) 
+                    ? data.listOfRequirements.map(req => `<li class="req-tag">${req}</li>`).join('')
+                    : '<li>No requirements listed.</li>';
+
+                detailsHtml = `
+                    <div class="result-card">
+                        <div class="info-duo">
+                            <div class="info-box">
+                                <i class="fas fa-dollar-sign"></i>
+                                <strong>التكلفة المقترحة</strong>
+                                <span>${data.suggestedCost || 'N/A'}</span>
+                            </div>
+                            <div class="info-box">
+                                <i class="fas fa-calendar-alt"></i>
+                                <strong>المدة المقترحة</strong>
+                                <span>${data.suggestPeriod || 'N/A'}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <h4><i class="fas fa-tasks"></i> المهارات والمتطلبات المقترحة</h4>
+                        <ul class="requirements-list">
+                            ${requirementsList}
+                        </ul>
+                    </div>
+                `;
+            }
 
             const html = `
                 <div class="result-card">
@@ -308,21 +338,6 @@
                     </div>
                 </div>
 
-                <div class="result-card">
-                    <div class="info-duo">
-                        <div class="info-box">
-                            <i class="fas fa-dollar-sign"></i>
-                            <strong>التكلفة المقترحة</strong>
-                            <span>${data.suggestedCost}</span>
-                        </div>
-                        <div class="info-box">
-                            <i class="fas fa-calendar-alt"></i>
-                            <strong>المدة المقترحة</strong>
-                            <span>${data.suggestPeriod}</span>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="result-card proposal-section">
                     <div class="header">
                         <h4><i class="fas fa-file-alt"></i> المقترح</h4>
@@ -333,12 +348,7 @@
                     <div class="proposal-text-area" id="proposalText">${data.proposal}</div>
                 </div>
 
-                <div class="result-card">
-                    <h4><i class="fas fa-tasks"></i> المهارات والمتطلبات المقترحة</h4>
-                    <ul class="requirements-list">
-                        ${requirementsList}
-                    </ul>
-                </div>
+                ${detailsHtml}
             `;
             resultArea.innerHTML = html;
         }
