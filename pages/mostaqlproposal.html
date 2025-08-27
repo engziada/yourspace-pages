@@ -244,7 +244,7 @@
             
             try {
                 // Using a test webhook that returns the expected structure
-                const response = await fetch('https://n8n.thez.solutions/webhook-test/generate-proposal', {
+                const response = await fetch('https://n8n.thez.solutions/webhook/generate-proposal', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ url: urlInput.value.trim() })
