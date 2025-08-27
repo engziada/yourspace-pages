@@ -86,9 +86,14 @@
             padding: 15px;
             background: #f8f9fa;
             border-radius: 8px;
-            white-space: pre-wrap;
             line-height: 1.7;
             color: #555;
+        }
+        .reason-list {
+            list-style-type: disc;
+            padding-inline-start: 20px;
+            text-align: left;
+            direction: ltr;
         }
         .info-duo {
             display: grid;
@@ -223,6 +228,16 @@
         // Store the full analysis data
         let currentAnalysisData = null;
         let rawResponseForSaving = ''; // Variable to hold the raw response
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound() {
+            const oscillator = audioCtx.createOscillator();
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(440, audioCtx.currentTime); // A4 note
+            oscillator.connect(audioCtx.destination);
+            oscillator.start();
+            setTimeout(() => oscillator.stop(), 200); // Play for 200ms
+        }
 
         async function processText() {
             const urlInput = document.getElementById('inputUrl');
@@ -281,6 +296,7 @@
             } finally {
                 loadingIndicator.style.display = 'none';
                 processBtn.disabled = false;
+                playSound();
             }
         }
 
@@ -292,37 +308,37 @@
             const conclusionText = isMatched ? 'ملائم للمهارات' : 'غير ملائم للمهارات';
             const conclusionIcon = isMatched ? 'fa-check-circle' : 'fa-times-circle';
 
-            // Conditionally render details to be immune to null values
-            let detailsHtml = '';
-            if (isMatched) {
-                const requirementsList = Array.isArray(data.listOfRequirements) 
-                    ? data.listOfRequirements.map(req => `<li class="req-tag">${req}</li>`).join('')
-                    : '<li>No requirements listed.</li>';
+            const reasonsHtml = Array.isArray(data.reason)
+                ? `<ul class="reason-list">${data.reason.slice(0, 3).map(reason => `<li>${reason || 'N/A'}</li>`).join('')}</ul>`
+                : (data.reason || 'N/A');
 
-                detailsHtml = `
-                    <div class="result-card">
-                        <div class="info-duo">
-                            <div class="info-box">
-                                <i class="fas fa-dollar-sign"></i>
-                                <strong>التكلفة المقترحة</strong>
-                                <span>${data.suggestedCost || 'N/A'}</span>
-                            </div>
-                            <div class="info-box">
-                                <i class="fas fa-calendar-alt"></i>
-                                <strong>المدة المقترحة</strong>
-                                <span>${data.suggestPeriod || 'N/A'}</span>
-                            </div>
+            const requirementsList = Array.isArray(data.listOfRequirements) 
+                ? data.listOfRequirements.map(req => `<li class="req-tag">${req || 'N/A'}</li>`).join('')
+                : '<li>No requirements listed.</li>';
+
+            const detailsHtml = `
+                <div class="result-card">
+                    <div class="info-duo">
+                        <div class="info-box">
+                            <i class="fas fa-dollar-sign"></i>
+                            <strong>التكلفة المقترحة</strong>
+                            <span>${data.suggestedCost || 'N/A'}</span>
+                        </div>
+                        <div class="info-box">
+                            <i class="fas fa-calendar-alt"></i>
+                            <strong>المدة المقترحة</strong>
+                            <span>${data.suggestPeriod || 'N/A'}</span>
                         </div>
                     </div>
+                </div>
 
-                    <div class="result-card">
-                        <h4><i class="fas fa-tasks"></i> المهارات والمتطلبات المقترحة</h4>
-                        <ul class="requirements-list">
-                            ${requirementsList}
-                        </ul>
-                    </div>
-                `;
-            }
+                <div class="result-card">
+                    <h4><i class="fas fa-tasks"></i> المهارات والمتطلبات المقترحة</h4>
+                    <ul class="requirements-list">
+                        ${requirementsList}
+                    </ul>
+                </div>
+            `;
 
             const html = `
                 <div class="result-card">
@@ -334,7 +350,7 @@
                         عرض سبب الاستنتاج <i class="fas fa-chevron-down"></i>
                     </div>
                     <div class="reason-content">
-                        ${Array.isArray(data.reason) ? data.reason.join('<br>') : data.reason}
+                        ${reasonsHtml}
                     </div>
                 </div>
 
@@ -345,7 +361,7 @@
                             <i class="fas fa-copy"></i> نسخ المقترح
                         </button>
                     </div>
-                    <div class="proposal-text-area" id="proposalText">${data.proposal}</div>
+                    <div class="proposal-text-area" id="proposalText">${data.proposal || 'N/A'}</div>
                 </div>
 
                 ${detailsHtml}
