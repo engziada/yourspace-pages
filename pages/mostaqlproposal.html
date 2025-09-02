@@ -271,14 +271,26 @@
                 
                 const rawText = await response.text();
                 rawResponseForSaving = rawText; // Save the raw text
+
+                // Check for an empty response from the server before trying to parse
+                if (!rawText.trim()) {
+                    throw new Error('أرسل الخادم استجابة فارغة. يرجى المحاولة مرة أخرى أو التأكد من أن الرابط يعمل بشكل صحيح.');
+                }
                 
                 try {
                     const data = JSON.parse(rawText);
-                    const output = data?.output;
-
-                    // Strict validation, as requested
-                    if (!output?.proposal || !output?.conclusion || !output?.reason || !output?.suggestedCost || !output?.suggestPeriod || !output?.listOfRequirements) {
-                        throw new Error('البيانات المستلمة من الخادم غير مكتملة أو بصيغة غير متوقعة.');
+                    
+                    // Handle both structures: {output:{...}} and direct {...}
+                    let output = data?.output || data;
+                    
+                    // Accept either proposal or briefDescription as valid response
+                    if (!output?.proposal && !output?.briefDescription) {
+                        throw new Error('لم يتم استلام مقترح أو وصف من الخادم.');
+                    }
+                    
+                    // Use briefDescription as fallback if proposal is missing
+                    if (!output.proposal && output.briefDescription) {
+                        output.proposal = output.briefDescription;
                     }
                     
                     currentAnalysisData = output;
@@ -288,7 +300,7 @@
                     console.error("Error processing response:", parseError);
                     const saveButton = `<button onclick="saveRawResponse()">Save Raw Response</button>`;
                     // Removed raw response from the error panel
-                    resultArea.innerHTML = `<div class="error">فشل في معالجة الرد من الخادم. قد يكون بصيغة غير متوقعة.<br><br>${saveButton}</div>`;
+                    resultArea.innerHTML = `<div class="error">فشل في معالجة الرد من الخادم. قد يكون بصيغة غير متوقعة. <br> <strong>Error:</strong> ${parseError.message}<br><br>${saveButton}</div>`;
                 }
                 
             } catch (error) {
@@ -303,57 +315,82 @@
         function renderRichResults(data) {
             const resultArea = document.getElementById('result');
             
-            const isMatched = data.conclusion === 'Matched';
+            // Handle missing fields gracefully
+            const conclusion = data?.conclusion || 'N/A';
+            const isMatched = conclusion === 'Matched';
             const conclusionClass = isMatched ? 'conclusion-matched' : 'conclusion-unmatched';
-            const conclusionText = isMatched ? 'ملائم للمهارات' : 'غير ملائم للمهارات';
+            const conclusionText = isMatched ? 'ملائم للمهارات' : (conclusion === 'Unmatched' ? 'غير ملائم للمهارات' : conclusion);
             const conclusionIcon = isMatched ? 'fa-check-circle' : 'fa-times-circle';
 
-            const reasonsHtml = Array.isArray(data.reason)
-                ? `<ul class="reason-list">${data.reason.slice(0, 3).map(reason => `<li>${reason || 'N/A'}</li>`).join('')}</ul>`
-                : (data.reason || 'N/A');
+            const reasonsHtml = Array.isArray(data?.reason)
+                ? `<ul class="reason-list">${data.reason.map(reason => `<li>${reason || 'N/A'}</li>`).join('')}</ul>`
+                : (data?.reason || 'N/A');
 
-            const requirementsList = Array.isArray(data.listOfRequirements) 
+            const requirementsList = Array.isArray(data?.listOfRequirements) 
                 ? data.listOfRequirements.map(req => `<li class="req-tag">${req || 'N/A'}</li>`).join('')
-                : '<li>No requirements listed.</li>';
+                : '<li>لا توجد متطلبات محددة</li>';
 
-            const detailsHtml = `
+            const projectInfoHtml = data?.Title || data?.Customer || data?.Budget || data?.Period || data?.Status || data?.Pub_Date || data?.Description ? `
+                <div class="result-card">
+                    <h4><i class="fas fa-info-circle"></i> معلومات المشروع</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                        <div><strong>العنوان:</strong> ${data.Title || 'N/A'}</div>
+                        <div><strong>العميل:</strong> ${data.Customer || 'N/A'}</div>
+                        <div><strong>الميزانية:</strong> ${data.Budget || 'N/A'}</div>
+                        <div><strong>المدة:</strong> ${data.Period || 'N/A'}</div>
+                        <div><strong>الحالة:</strong> ${data.Status || 'N/A'}</div>
+                        <div><strong>تاريخ النشر:</strong> ${data.Pub_Date || 'N/A'}</div>
+                    </div>
+                    ${data.Description ? `<div><strong>الوصف:</strong> ${data.Description}</div>` : ''}
+                </div>
+            ` : '';
+
+            const detailsHtml = (data?.suggestedCost || data?.suggestPeriod) ? `
                 <div class="result-card">
                     <div class="info-duo">
-                        <div class="info-box">
+                        ${data.suggestedCost ? `<div class="info-box">
                             <i class="fas fa-dollar-sign"></i>
                             <strong>التكلفة المقترحة</strong>
-                            <span>${data.suggestedCost || 'N/A'}</span>
-                        </div>
-                        <div class="info-box">
+                            <span>${data.suggestedCost}</span>
+                        </div>` : ''}
+                        ${data.suggestPeriod ? `<div class="info-box">
                             <i class="fas fa-calendar-alt"></i>
                             <strong>المدة المقترحة</strong>
-                            <span>${data.suggestPeriod || 'N/A'}</span>
-                        </div>
+                            <span>${data.suggestPeriod}</span>
+                        </div>` : ''}
                     </div>
                 </div>
+            ` : '';
 
+            const requirementsSection = Array.isArray(data?.listOfRequirements) && data.listOfRequirements.length > 0 ? `
                 <div class="result-card">
                     <h4><i class="fas fa-tasks"></i> المهارات والمتطلبات المقترحة</h4>
                     <ul class="requirements-list">
                         ${requirementsList}
                     </ul>
                 </div>
-            `;
+            ` : '';
 
-            const html = `
+            const conclusionSection = data?.conclusion ? `
                 <div class="result-card">
                     <div class="conclusion-badge ${conclusionClass}">
                         <i class="fas ${conclusionIcon}"></i>
                         <span>${conclusionText}</span>
                     </div>
-                    <div class="reason-toggle" onclick="toggleReason(this)">
+                    ${data.reason ? `<div class="reason-toggle" onclick="toggleReason(this)">
                         عرض سبب الاستنتاج <i class="fas fa-chevron-down"></i>
                     </div>
                     <div class="reason-content">
                         ${reasonsHtml}
-                    </div>
+                    </div>` : ''}
                 </div>
+            ` : '';
 
+            const html = `
+                ${projectInfoHtml}
+                ${conclusionSection}
+                ${detailsHtml}
+                ${requirementsSection}
                 <div class="result-card proposal-section">
                     <div class="header">
                         <h4><i class="fas fa-file-alt"></i> المقترح</h4>
@@ -363,15 +400,12 @@
                     </div>
                     <div class="proposal-text-area" id="proposalText">${data.proposal || 'N/A'}</div>
                 </div>
-
-                ${detailsHtml}
             `;
             resultArea.innerHTML = html;
         }
 
         function saveRawResponse() {
-            if (!rawResponseForSaving) return;
-            const blob = new Blob([rawResponseForSaving], { type: 'application/json' });
+            const blob = new Blob([rawResponseForSaving || ''], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
