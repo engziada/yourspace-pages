@@ -172,6 +172,28 @@
             font-size: 0.95rem;
         }
 
+        .description-area,
+        .category-area,
+        .skills-area {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            line-height: 1.7;
+        }
+
+        .description-area strong,
+        .category-area strong,
+        .skills-area strong {
+            color: #1565c0;
+            margin-left: 8px;
+        }
+
+        .skills-area {
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
         /* --- Responsive styles --- */
         @media (max-width: 768px) {
             body { padding: 10px; }
@@ -285,16 +307,24 @@
                     
                     // Accept either proposal or briefDescription as valid response
                     if (!output?.proposal && !output?.briefDescription) {
-                        throw new Error('لم يتم استلام مقترح أو وصف من الخادم.');
+                        output.proposal = output.briefDescription || '';
                     }
                     
-                    // Use briefDescription as fallback if proposal is missing
-                    if (!output.proposal && output.briefDescription) {
-                        output.proposal = output.briefDescription;
-                    }
+                    // Map the properties to ensure backward compatibility
+                    const mappedOutput = {
+                        ...output,
+                        proposal: output.proposal || output.briefDescription || '',
+                        title: output.title || output.Title || '',
+                        description: output.description || output.Description || '',
+                        budget: output.budget || output.Budget || '',
+                        period: output.period || output.Period || '',
+                        status: output.status || output.Status || '',
+                        pub_date: output.pub_date || output.Pub_Date || '',
+                        owner_name: output.owner_name || output.Customer || '',
+                    };
                     
-                    currentAnalysisData = output;
-                    renderRichResults(output);
+                    currentAnalysisData = mappedOutput;
+                    renderRichResults(mappedOutput);
 
                 } catch (parseError) {
                     console.error("Error processing response:", parseError);
@@ -330,18 +360,20 @@
                 ? data.listOfRequirements.map(req => `<li class="req-tag">${req || 'N/A'}</li>`).join('')
                 : '<li>لا توجد متطلبات محددة</li>';
 
-            const projectInfoHtml = data?.Title || data?.Customer || data?.Budget || data?.Period || data?.Status || data?.Pub_Date || data?.Description ? `
+            const projectInfoHtml = data?.title || data?.owner_name || data?.budget || data?.period || data?.status || data?.pub_date || data?.description ? `
                 <div class="result-card">
                     <h4><i class="fas fa-info-circle"></i> معلومات المشروع</h4>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                        <div><strong>العنوان:</strong> ${data.Title || 'N/A'}</div>
-                        <div><strong>العميل:</strong> ${data.Customer || 'N/A'}</div>
-                        <div><strong>الميزانية:</strong> ${data.Budget || 'N/A'}</div>
-                        <div><strong>المدة:</strong> ${data.Period || 'N/A'}</div>
-                        <div><strong>الحالة:</strong> ${data.Status || 'N/A'}</div>
-                        <div><strong>تاريخ النشر:</strong> ${data.Pub_Date || 'N/A'}</div>
+                        <div><strong>العنوان:</strong> ${data.title || 'N/A'}</div>
+                        <div><strong>صاحب المشروع:</strong> ${data.owner_name || 'N/A'}</div>
+                        <div><strong>الميزانية:</strong> ${data.budget || 'N/A'}</div>
+                        <div><strong>المدة:</strong> ${data.period || 'N/A'}</div>
+                        <div><strong>الحالة:</strong> ${data.status || 'N/A'}</div>
+                        <div><strong>تاريخ النشر:</strong> ${data.pub_date || 'N/A'}</div>
                     </div>
-                    ${data.Description ? `<div><strong>الوصف:</strong> ${data.Description}</div>` : ''}
+                    ${data.description ? `<div class="description-area"><strong>الوصف:</strong> ${data.description}</div>` : ''}
+                    ${data.category ? `<div class="category-area"><strong>التصنيف:</strong> ${data.category}</div>` : ''}
+                    ${data.skills ? `<div class="skills-area"><strong>المهارات المطلوبة:</strong> ${data.skills}</div>` : ''}
                 </div>
             ` : '';
 
